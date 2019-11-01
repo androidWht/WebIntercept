@@ -1,0 +1,2 @@
+include ':app', ':web-annoation', ':web-processor', ':web-intercept'
+rootProject.name='WebIntercept'
