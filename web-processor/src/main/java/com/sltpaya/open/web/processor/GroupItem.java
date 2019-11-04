@@ -204,7 +204,7 @@ class GroupItem {
                             "if (handler != null && $N.matcher(uri.toString()).find())",
                             regExpItem.fieldSpec
                     )
-                    .addStatement("return handler.handle(this, uri)")
+                    .addStatement("return handler.handle(this,context, uri)")
                     .endControlFlow();
         }
 
