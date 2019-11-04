@@ -55,7 +55,6 @@ class GroupItem {
     private FieldSpec mapFieldSpec;
     private ClassName uriMatcherTypeName;
 
-    private FieldSpec contextFieldSpec;
 
     private List<TypeElement> elements = new ArrayList<>();
 
@@ -119,9 +118,6 @@ class GroupItem {
                         Consts.FIELD_MAP_NAME,
                         PRIVATE
                 ).build();
-        contextFieldSpec = FieldSpec.builder(
-                contextTypeName,
-                "context", PRIVATE).build();
         MethodSpec.Builder methodInitMethodBuilder = generateMethodInitCode();
 
         ////////////////////add//////////////////////////////
@@ -161,10 +157,6 @@ class GroupItem {
                 .addParameter(contextTypeName, "context")
                 .addParameter(uriTypeName, "uri")
                 .returns(resultTypeName)
-                //.addStatement(
-                //        "this.$N = context",
-                //        contextFieldSpec
-                //)
                 .addStatement(
                         "$T handler",
                         webHandlerTypeName
@@ -176,7 +168,6 @@ class GroupItem {
         Collections.reverse(keys);
 
         for (Integer key : keys) {
-            //dispatchMethodBuilder.addStatement("/////////// UriMatcher priority=$L start ///////////", key);
             FieldSpec uriMatcher = uriMatcherMap.get(key);
             dispatchMethodBuilder
                     .addStatement(
@@ -185,9 +176,8 @@ class GroupItem {
                             uriMatcher
                     )
                     .beginControlFlow("if (handler != null)")
-                    .addStatement("return handler.handle(this, context, uri)")
+                    .addStatement("return handler.handle(context,this, uri)")
                     .endControlFlow();
-            //dispatchMethodBuilder.addStatement("/////////// UriMatcher priority=$L end ///////////", key);
         }
 
 
@@ -204,7 +194,7 @@ class GroupItem {
                             "if (handler != null && $N.matcher(uri.toString()).find())",
                             regExpItem.fieldSpec
                     )
-                    .addStatement("return handler.handle(this, uri)")
+                    .addStatement("return handler.handle(context,this, uri)")
                     .endControlFlow();
         }
 
@@ -214,18 +204,8 @@ class GroupItem {
                         resultTypeName
                 );
 
-        //getContext
-        MethodSpec getContextMethodSpec = MethodSpec.methodBuilder("getContext")
-                .addAnnotation(Override.class)
-                .addModifiers(PUBLIC)
-                .returns(contextTypeName)
-                .addStatement(
-                        "return context"
-                ).build();
 
-        builder
-                .addMethod(dispatchMethodBuilder.build());
-                //.addMethod(getContextMethodSpec);
+        builder.addMethod(dispatchMethodBuilder.build());
     }
 
     private void generateUriMatcher() {
@@ -387,8 +367,6 @@ class GroupItem {
                 }
             }
         }
-        //context变量
-        builder.addField(contextFieldSpec);
         builder.addInitializerBlock(
                 codeBlockBuilder.build()
         );
