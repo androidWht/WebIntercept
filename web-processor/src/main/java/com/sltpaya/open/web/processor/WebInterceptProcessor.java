@@ -51,7 +51,7 @@ public class WebInterceptProcessor extends AbstractProcessor {
         logger = new Logger(processingEnv.getMessager());
     }
 
-    private Map<String, GroupItem> groups = new HashMap<>();
+    private final Map<String, GroupItem> groups = new HashMap<>();
 
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {

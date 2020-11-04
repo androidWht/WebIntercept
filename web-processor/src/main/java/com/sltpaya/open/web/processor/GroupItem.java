@@ -45,18 +45,17 @@ class GroupItem {
 
     public String name;
 
-    private Map<Integer, FieldSpec> uriMatcherMap = new HashMap<>();
-    private List<WebInterceptProcessor.RegExpItem> regExpPatternList = new ArrayList<>();
-    private List<WebInterceptProcessor.GenerateItem> generateItems = new ArrayList<>();
-    private List<WebInterceptProcessor.InterceptItem> interceptItems = new ArrayList<>();
+    private final Map<Integer, FieldSpec> uriMatcherMap = new HashMap<>();
+    private final List<WebInterceptProcessor.RegExpItem> regExpPatternList = new ArrayList<>();
+    private final List<WebInterceptProcessor.GenerateItem> generateItems = new ArrayList<>();
+    private final List<WebInterceptProcessor.InterceptItem> interceptItems = new ArrayList<>();
 
-    private Logger logger;
-    private ClassName patternTypeName = ClassName.get(Pattern.class);
+    private final ClassName patternTypeName = ClassName.get(Pattern.class);
     private FieldSpec mapFieldSpec;
     private ClassName uriMatcherTypeName;
 
 
-    private List<TypeElement> elements = new ArrayList<>();
+    private final List<TypeElement> elements = new ArrayList<>();
 
     public void addElement(TypeElement element) {
         elements.add(element);
@@ -73,7 +72,6 @@ class GroupItem {
     }
 
     public void write(Logger logger, Filer filer) throws IOException {
-        this.logger = logger;
         process();
         generate();
         // Generate Creator

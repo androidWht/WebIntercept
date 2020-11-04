@@ -9,7 +9,7 @@ import javax.tools.Diagnostic;
  */
 class Logger {
 
-    private Messager msg;
+    private final Messager msg;
 
     public Logger(Messager messager) {
         msg = messager;
